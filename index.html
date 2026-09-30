@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Portfolio Generator – Smart AI-Powered Portfolio Builder</title>
+    <meta name="description" content="Create stunning professional portfolios with AI-powered bio generation, smart skill suggestions, and intelligent writing assistance.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Neural Network Background Canvas -->
+    <canvas id="neuralCanvas"></canvas>
+
+    <header class="app-header">
+        <div class="logo">
+            <div class="logo-pulse"></div>
+            <i class="fa-solid fa-brain"></i> AI Portfolio Generator
+            <span class="ai-badge">AI</span>
+        </div>
+        <div class="header-actions">
+            <select id="templateSelect" class="select-box">
+                <option value="modern">🎨 Modern</option>
+                <option value="minimal">✏️ Minimal</option>
+                <option value="dark">🌑 Dark Professional</option>
+                <option value="gradient">🌈 Gradient Vibes</option>
+                <option value="glass">💎 Glassmorphism</option>
+                <option value="neon">⚡ Neon Cyberpunk</option>
+                <option value="elegant">🏛️ Elegant Classic</option>
+                <option value="sunset">🌅 Sunset Warm</option>
+            </select>
+            <button id="downloadBtn" class="btn btn-outline"><i class="fa-solid fa-download"></i> Download HTML</button>
+            <button id="publishBtn" class="btn btn-primary"><i class="fa-solid fa-rocket"></i> Publish</button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <!-- Editor Panel -->
+        <aside class="editor-panel">
+            <div class="editor-tabs">
+                <button class="tab-btn active" data-tab="basic">Basic Info</button>
+                <button class="tab-btn" data-tab="experience">Experience</button>
+                <button class="tab-btn" data-tab="projects">Projects</button>
+                <button class="tab-btn" data-tab="more">More</button>
+            </div>
+
+            <div class="editor-content">
+                <!-- Basic Info Tab -->
+                <div class="tab-pane active" id="tab-basic">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="inputName" placeholder="e.g. Jane Doe" value="Jane Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Job Title</label>
+                        <input type="text" id="inputTitle" placeholder="e.g. Full Stack Developer" value="Full Stack Developer">
+                    </div>
+                    <div class="form-group">
+                        <label>Profile Photo URL</label>
+                        <input type="text" id="inputPhoto" placeholder="https://..." value="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150">
+                    </div>
+                    <div class="form-group">
+                        <label>Bio / About Me <button class="ai-assist-btn" id="aiGenerateBio" title="AI Generate Bio"><i class="fa-solid fa-robot"></i> AI Generate</button></label>
+                        <textarea id="inputBio" rows="4" placeholder="Short bio...">I am a passionate software engineer with 5+ years of experience building scalable web applications.</textarea>
+                        <button class="ai-assist-btn ai-improve-btn" id="aiImproveBio"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Improve Writing</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Skills (comma separated)</label>
+                        <input type="text" id="inputSkills" placeholder="JavaScript, React, Node.js" value="JavaScript, React, Node.js, Python, AWS">
+                        <div class="ai-skill-suggestions" id="aiSkillSuggestions"></div>
+                    </div>
+                    
+                    <h3 class="section-title">Contact & Social</h3>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="inputEmail" placeholder="jane@example.com" value="jane@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" id="inputPhone" placeholder="+1 234 567 890" value="+1 234 567 8900">
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" id="inputLocation" placeholder="San Francisco, CA" value="San Francisco, CA">
+                    </div>
+                    <div class="form-group">
+                        <label>LinkedIn URL</label>
+                        <input type="text" id="inputLinkedin" placeholder="linkedin.com/in/..." value="https://linkedin.com">
+                    </div>
+                    <div class="form-group">
+                        <label>GitHub URL</label>
+                        <input type="text" id="inputGithub" placeholder="github.com/..." value="https://github.com">
+                    </div>
+                </div>
+
+                <!-- Experience & Education Tab -->
+                <div class="tab-pane" id="tab-experience">
+                    <h3 class="section-title">Experience</h3>
+                    <div id="experienceList">
+                        <!-- Experience Items -->
+                        <div class="dynamic-item">
+                            <input type="text" class="exp-title" placeholder="Job Title" value="Senior Developer">
+                            <input type="text" class="exp-company" placeholder="Company" value="Tech Corp">
+                            <input type="text" class="exp-dates" placeholder="Dates (e.g. 2020 - Present)" value="2021 - Present">
+                            <textarea class="exp-desc" placeholder="Description">Led frontend development using React and TypeScript.</textarea>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline btn-sm w-100" onclick="addExperience()">+ Add Experience</button>
+
+                    <h3 class="section-title mt-4">Education</h3>
+                    <div id="educationList">
+                        <div class="dynamic-item">
+                            <input type="text" class="edu-degree" placeholder="Degree" value="B.S. Computer Science">
+                            <input type="text" class="edu-school" placeholder="School/University" value="State University">
+                            <input type="text" class="edu-dates" placeholder="Dates" value="2015 - 2019">
+                        </div>
+                    </div>
+                    <button class="btn btn-outline btn-sm w-100" onclick="addEducation()">+ Add Education</button>
+                </div>
+
+                <!-- Projects & Services Tab -->
+                <div class="tab-pane" id="tab-projects">
+                    <h3 class="section-title">Projects</h3>
+                    <div id="projectsList">
+                        <div class="dynamic-item">
+                            <input type="text" class="proj-title" placeholder="Project Name" value="E-Commerce Platform">
+                            <input type="text" class="proj-tech" placeholder="Technologies used" value="Next.js, Stripe, Tailwind">
+                            <textarea class="proj-desc" placeholder="Project Description">A full-stack e-commerce solution with payment integration.</textarea>
+                            <input type="text" class="proj-link" placeholder="Project Link" value="#">
+                        </div>
+                    </div>
+                    <button class="btn btn-outline btn-sm w-100" onclick="addProject()">+ Add Project</button>
+                    
+                    <h3 class="section-title mt-4">Services</h3>
+                    <div id="servicesList">
+                        <div class="dynamic-item">
+                            <input type="text" class="srv-title" placeholder="Service Name" value="Web Development">
+                            <textarea class="srv-desc" placeholder="Service Description">Building responsive and fast web applications.</textarea>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline btn-sm w-100" onclick="addService()">+ Add Service</button>
+                </div>
+                
+                <!-- More (Certifications, Achievements, Testimonials) -->
+                <div class="tab-pane" id="tab-more">
+                    <h3 class="section-title">Certifications & Achievements</h3>
+                    <div id="certsList">
+                        <div class="dynamic-item">
+                            <input type="text" class="cert-title" placeholder="Award/Certificate Name" value="AWS Certified Solutions Architect">
+                            <input type="text" class="cert-issuer" placeholder="Issuer/Organization" value="Amazon Web Services">
+                            <input type="text" class="cert-date" placeholder="Year" value="2022">
+                        </div>
+                    </div>
+                    <button class="btn btn-outline btn-sm w-100" onclick="addCert()">+ Add Certification</button>
+                    
+                    <h3 class="section-title mt-4">Testimonials</h3>
+                    <div id="testimonialsList">
+                        <div class="dynamic-item">
+                            <input type="text" class="test-name" placeholder="Client Name" value="John Smith">
+                            <input type="text" class="test-role" placeholder="Client Role/Company" value="CEO, Startup Inc">
+                            <textarea class="test-text" placeholder="Testimonial">Jane is an exceptional developer who delivered our project ahead of schedule.</textarea>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline btn-sm w-100" onclick="addTestimonial()">+ Add Testimonial</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Preview Panel -->
+        <main class="preview-panel">
+            <div class="preview-toolbar">
+                <span><i class="fa-solid fa-eye"></i> Live Preview</span>
+                <div class="device-toggles">
+                    <button class="device-btn active" data-device="desktop"><i class="fa-solid fa-desktop"></i></button>
+                    <button class="device-btn" data-device="mobile"><i class="fa-solid fa-mobile-screen"></i></button>
+                </div>
+            </div>
+            <div class="preview-frame-container desktop">
+                <iframe id="previewFrame" src="about:blank"></iframe>
+            </div>
+        </main>
+    </div>
+
+    <!-- Template base (hidden) used to generate the iframe content -->
+    <script id="portfolioTemplate" type="text/template">
+        <!DOCTYPE html>
+        <html lang="en" class="{{TEMPLATE_CLASS}}">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>{{NAME}} - Portfolio</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            <style>
+                /* Portfolio Base Styles */
+                :root {
+                    --primary: #4f46e5;
+                    --text: #1f2937;
+                    --text-light: #6b7280;
+                    --bg: #ffffff;
+                    --bg-alt: #f9fafb;
+                    --border: #e5e7eb;
+                }
+                .dark {
+                    --primary: #6366f1;
+                    --text: #f9fafb;
+                    --text-light: #9ca3af;
+                    --bg: #111827;
+                    --bg-alt: #1f2937;
+                    --border: #374151;
+                }
+                .minimal {
+                    --primary: #111827;
+                    --bg-alt: #ffffff;
+                    font-family: 'Helvetica Neue', sans-serif;
+                }
+                /* ── Gradient Vibes ── */
+                .gradient {
+                    --primary: #8b5cf6;
+                    --text: #ffffff;
+                    --text-light: #c4b5fd;
+                    --bg: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+                    --bg-alt: rgba(255,255,255,0.06);
+                    --border: rgba(139,92,246,0.25);
+                }
+                .gradient body { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%); background-attachment: fixed; }
+                .gradient .hero { background: linear-gradient(135deg, #7c3aed, #2563eb); }
+                .gradient .hero h1 { color: #fff; }
+                .gradient .hero img { border-color: rgba(255,255,255,0.3); box-shadow: 0 0 40px rgba(139,92,246,0.4); }
+                .gradient .skill-tag { background: rgba(139,92,246,0.2); border-color: rgba(139,92,246,0.4); color: #c4b5fd; }
+                .gradient .card { background: rgba(255,255,255,0.06); border-color: rgba(139,92,246,0.2); backdrop-filter: blur(8px); }
+                .gradient .section-title { background: linear-gradient(90deg, #a78bfa, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+                /* ── Glassmorphism ── */
+                .glass {
+                    --primary: #06b6d4;
+                    --text: #f0fdfa;
+                    --text-light: #99f6e4;
+                    --bg: #0c1222;
+                    --bg-alt: rgba(255,255,255,0.05);
+                    --border: rgba(6,182,212,0.2);
+                }
+                .glass body { background: linear-gradient(160deg, #0c1222, #1a1a3e, #0c1222); background-attachment: fixed; }
+                .glass .hero { background: rgba(6,182,212,0.08); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(6,182,212,0.15); }
+                .glass .hero img { border-color: rgba(6,182,212,0.4); box-shadow: 0 0 30px rgba(6,182,212,0.3); }
+                .glass .card { background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); border: 1px solid rgba(6,182,212,0.15); border-radius: 16px; }
+                .glass .card:hover { background: rgba(255,255,255,0.08); box-shadow: 0 8px 32px rgba(6,182,212,0.15); }
+                .glass .skill-tag { background: rgba(6,182,212,0.1); border-color: rgba(6,182,212,0.3); color: #67e8f9; }
+                .glass .section-title { color: #67e8f9; }
+
+                /* ── Neon Cyberpunk ── */
+                .neon {
+                    --primary: #f43f5e;
+                    --text: #fafafa;
+                    --text-light: #a1a1aa;
+                    --bg: #09090b;
+                    --bg-alt: #18181b;
+                    --border: #27272a;
+                }
+                .neon body { background: #09090b; }
+                .neon .hero { background: #09090b; border-bottom: 2px solid #f43f5e; position: relative; }
+                .neon .hero::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #f43f5e, #a855f7, #3b82f6, #f43f5e); background-size: 300% 100%; animation: neonSlide 3s linear infinite; }
+                @keyframes neonSlide { 0% { background-position: 0% 0%; } 100% { background-position: 300% 0%; } }
+                .neon .hero h1 { text-shadow: 0 0 20px rgba(244,63,94,0.5), 0 0 60px rgba(244,63,94,0.2); }
+                .neon .hero img { border-color: #f43f5e; box-shadow: 0 0 25px rgba(244,63,94,0.4), 0 0 50px rgba(168,85,247,0.2); }
+                .neon .card { background: #18181b; border: 1px solid #27272a; }
+                .neon .card:hover { border-color: #f43f5e; box-shadow: 0 0 20px rgba(244,63,94,0.15); }
+                .neon .skill-tag { background: transparent; border: 1px solid #f43f5e; color: #f43f5e; }
+                .neon .section-title { color: #f43f5e; text-shadow: 0 0 15px rgba(244,63,94,0.3); }
+                .neon a { color: #f43f5e; }
+
+                /* ── Elegant Classic ── */
+                .elegant {
+                    --primary: #b45309;
+                    --text: #1c1917;
+                    --text-light: #78716c;
+                    --bg: #faf7f2;
+                    --bg-alt: #f5f0e8;
+                    --border: #e7e0d5;
+                }
+                .elegant body { font-family: 'Georgia', 'Times New Roman', serif; background: #faf7f2; }
+                .elegant .hero { background: linear-gradient(180deg, #f5f0e8, #faf7f2); }
+                .elegant .hero h1 { font-family: 'Georgia', serif; letter-spacing: 0.02em; color: #1c1917; }
+                .elegant .hero h2 { font-style: italic; }
+                .elegant .hero img { border-color: #b45309; box-shadow: 0 4px 20px rgba(180,83,9,0.15); }
+                .elegant .section-title { font-family: 'Georgia', serif; color: #1c1917; position: relative; display: inline-block; }
+                .elegant section { text-align: center; }
+                .elegant .section-title::after { content: ''; display: block; width: 60px; height: 3px; background: #b45309; margin: 12px auto 0; border-radius: 2px; }
+                .elegant .card { background: #fff; border: 1px solid #e7e0d5; border-radius: 4px; text-align: left; }
+                .elegant .card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+                .elegant .skill-tag { background: #fff; border: 1px solid #b45309; color: #b45309; border-radius: 4px; }
+                .elegant a { color: #b45309; }
+
+                /* ── Sunset Warm ── */
+                .sunset {
+                    --primary: #ea580c;
+                    --text: #fff7ed;
+                    --text-light: #fed7aa;
+                    --bg: #1a0a00;
+                    --bg-alt: rgba(234,88,12,0.06);
+                    --border: rgba(234,88,12,0.2);
+                }
+                .sunset body { background: linear-gradient(180deg, #1a0a00 0%, #2d1600 50%, #1a0a00 100%); background-attachment: fixed; }
+                .sunset .hero { background: linear-gradient(135deg, #ea580c, #dc2626, #f59e0b); }
+                .sunset .hero h1, .sunset .hero h2 { color: #fff; }
+                .sunset .hero img { border-color: rgba(255,255,255,0.4); box-shadow: 0 0 30px rgba(234,88,12,0.4); }
+                .sunset .card { background: rgba(234,88,12,0.06); border: 1px solid rgba(234,88,12,0.15); }
+                .sunset .card:hover { border-color: #ea580c; box-shadow: 0 4px 20px rgba(234,88,12,0.15); }
+                .sunset .skill-tag { background: rgba(234,88,12,0.15); border-color: rgba(234,88,12,0.35); color: #fdba74; }
+                .sunset .section-title { color: #fb923c; }
+                .sunset a { color: #f97316; }
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); line-height: 1.6; }
+                a { text-decoration: none; color: var(--primary); }
+                .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+                section { padding: 80px 0; border-bottom: 1px solid var(--border); }
+                section:last-child { border-bottom: none; }
+                .section-title { font-size: 2rem; font-weight: 700; margin-bottom: 40px; text-align: center; }
+                
+                /* Hero Section */
+                .hero { text-align: center; padding: 100px 0; background: var(--bg-alt); }
+                .hero img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid var(--bg); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+                .hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.02em; }
+                .hero h2 { font-size: 1.5rem; color: var(--text-light); font-weight: 400; margin-bottom: 20px; }
+                .social-links { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+                .social-links a { font-size: 1.5rem; color: var(--text-light); transition: color 0.2s; }
+                .social-links a:hover { color: var(--primary); }
+                
+                /* About */
+                .about-content { font-size: 1.1rem; max-width: 800px; margin: 0 auto; text-align: center; color: var(--text-light); }
+                .contact-info { display: flex; justify-content: center; gap: 30px; margin-top: 30px; flex-wrap: wrap; }
+                .contact-item { display: flex; align-items: center; gap: 10px; color: var(--text-light); }
+                
+                /* Skills */
+                .skills-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; max-width: 800px; margin: 0 auto; }
+                .skill-tag { background: var(--bg-alt); padding: 8px 16px; border-radius: 999px; font-weight: 500; border: 1px solid var(--border); }
+                
+                /* Grid Layouts (Experience, Projects, etc) */
+                .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+                .card { background: var(--bg-alt); padding: 30px; border-radius: 12px; border: 1px solid var(--border); transition: transform 0.2s; }
+                .card:hover { transform: translateY(-5px); }
+                .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 15px; }
+                .card-title { font-size: 1.25rem; font-weight: 600; }
+                .card-subtitle { color: var(--primary); font-weight: 500; }
+                .card-date { color: var(--text-light); font-size: 0.9rem; }
+                
+                /* Projects specifics */
+                .tech-stack { font-size: 0.85rem; color: var(--primary); margin-bottom: 15px; font-weight: 500; }
+                .project-link { display: inline-block; margin-top: 15px; font-weight: 500; font-size: 0.9rem; }
+            </style>
+        </head>
+        <body>
+            <!-- Hero -->
+            <section class="hero">
+                <div class="container">
+                    <img src="{{PHOTO}}" alt="{{NAME}}">
+                    <h1>{{NAME}}</h1>
+                    <h2>{{TITLE}}</h2>
+                    <div class="social-links">
+                        <a href="{{LINKEDIN}}" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+                        <a href="{{GITHUB}}" target="_blank"><i class="fa-brands fa-github"></i></a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About & Contact -->
+            <section id="about">
+                <div class="container">
+                    <h2 class="section-title">About Me</h2>
+                    <p class="about-content">{{BIO}}</p>
+                    <div class="contact-info">
+                        <div class="contact-item"><i class="fa-solid fa-envelope"></i> {{EMAIL}}</div>
+                        <div class="contact-item"><i class="fa-solid fa-phone"></i> {{PHONE}}</div>
+                        <div class="contact-item"><i class="fa-solid fa-location-dot"></i> {{LOCATION}}</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills -->
+            <section id="skills">
+                <div class="container">
+                    <h2 class="section-title">Skills</h2>
+                    <div class="skills-container">
+                        {{SKILLS_HTML}}
+                    </div>
+                </div>
+            </section>
+
+            <!-- Experience -->
+            <section id="experience">
+                <div class="container">
+                    <h2 class="section-title">Experience</h2>
+                    <div class="grid">
+                        {{EXPERIENCE_HTML}}
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects -->
+            <section id="projects">
+                <div class="container">
+                    <h2 class="section-title">Projects</h2>
+                    <div class="grid">
+                        {{PROJECTS_HTML}}
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Education -->
+            <section id="education">
+                <div class="container">
+                    <h2 class="section-title">Education & Certifications</h2>
+                    <div class="grid">
+                        {{EDUCATION_HTML}}
+                        {{CERTS_HTML}}
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services -->
+            <section id="services">
+                <div class="container">
+                    <h2 class="section-title">Services</h2>
+                    <div class="grid">
+                        {{SERVICES_HTML}}
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Testimonials -->
+            <section id="testimonials" style="background: var(--bg-alt);">
+                <div class="container">
+                    <h2 class="section-title">Testimonials</h2>
+                    <div class="grid">
+                        {{TESTIMONIALS_HTML}}
+                    </div>
+                </div>
+            </section>
+        </body>
+        </html>
+    </script>
+
+    <!-- AI Chatbot Floating Widget -->
+    <div class="ai-chatbot-toggle" id="aiChatToggle">
+        <i class="fa-solid fa-robot"></i>
+        <span class="chat-pulse"></span>
+    </div>
+    <div class="ai-chatbot-panel" id="aiChatPanel">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <i class="fa-solid fa-brain"></i> AI Portfolio Assistant
+            </div>
+            <button class="chatbot-close" id="aiChatClose"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="chatbot-messages" id="chatMessages">
+            <div class="chat-msg bot">
+                <div class="chat-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="chat-bubble">👋 Hi! I'm your AI Portfolio Assistant. I can help you with:
+                    <ul>
+                        <li>✍️ Writing your bio</li>
+                        <li>🎯 Suggesting skills</li>
+                        <li>📝 Improving descriptions</li>
+                        <li>💡 Portfolio tips</li>
+                    </ul>
+                    Type a message or click a quick action below!
+                </div>
+            </div>
+        </div>
+        <div class="chatbot-quick-actions">
+            <button class="quick-action-btn" data-action="bio">✍️ Write Bio</button>
+            <button class="quick-action-btn" data-action="skills">🎯 Suggest Skills</button>
+            <button class="quick-action-btn" data-action="tips">💡 Tips</button>
+            <button class="quick-action-btn" data-action="review">📊 Review</button>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="Ask AI anything about your portfolio...">
+            <button id="chatSendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- AI Processing Overlay -->
+    <div class="ai-processing-overlay" id="aiOverlay">
+        <div class="ai-processing-content">
+            <div class="ai-spinner">
+                <div class="spinner-ring"></div>
+                <i class="fa-solid fa-brain"></i>
+            </div>
+            <p class="ai-processing-text">AI is thinking...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
